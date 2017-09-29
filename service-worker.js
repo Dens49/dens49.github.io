@@ -10,7 +10,8 @@ let filesToCache = [
     '/scripts/main.js',
     '/styles/inline.css',
     '/images/ic_add_white_24px.svg',
-    '/images/ic_refresh_white_24px.svg'
+    '/images/ic_refresh_white_24px.svg',
+    'https://assets.chucknorris.host/img/avatar/chuck-norris.png'
 ];
 
 // installiert alle Dateien die für die App Shell nötig sind
@@ -68,7 +69,7 @@ self.addEventListener('sync', (e) => {
                         all[0].postMessage({joke: data});
                     }
                 });
-                self.registration.showNotification('Synced ' + e.tag + ': Fetched new random joke!');
+                self.registration.showNotification('Fetched Chuck Norris Fact!');
             }).catch((error) => {
                 console.log('Error: ' + error.message);
         }));
