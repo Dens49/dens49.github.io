@@ -197,14 +197,18 @@ body {
 
 .joke_container {
     display: none;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
-.joke_image, .joke_text, .online_status {
+.joke_image, .joke_text {
     display: inline-block;
 }
 
+.joke_text {
+    margin-top: 10px;
+}
+
 .online_status {
-    margin: 0 14px 0 0;
-    flex: 3;
-    font-size: 18px;
+    margin-left: 15px;
 }
