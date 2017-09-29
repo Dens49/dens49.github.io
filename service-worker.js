@@ -53,7 +53,13 @@ self.addEventListener('fetch', (e) => {
 });
 
 self.addEventListener('sync', (e) => {
-    self.registration.showNotification('Event ' + e.tag + ' could was synced!');
+    if (e.tag.startsWith(app.loadRandomJokeSyncTagPrefix)) {
+        e.waitUntil(app.loadRandomJoke());
+        self.registration.showNotification('Synced ' + e.tag + ': Fetched new random joke!');
+    }
+    else {
+        console.log('Some other sync tag that shouldn\'t trigger a notification: ' + e.tag);
+    }
 });
 
 

@@ -51,6 +51,7 @@
         jokeContainerElement: document.querySelector('.joke_container'),
         jokeTextElement: document.querySelector('.joke_container > .joke_text'),
         lastJokeLocalStorageKey: 'lastJoke',
+        loadRandomJokeSyncTagPrefix: 'loadJokeSync_',
         chuckApiClient: ChuckNorrisIOApiClient
     };
 
@@ -123,23 +124,11 @@
         }).then(function() {
             return navigator.serviceWorker.ready;
         }).then(function(reg) {
-            return reg.sync.register('syncTest');
+            return reg.sync.register(app.loadRandomJokeSyncTagPrefix + (new Date()).getTime());
         }).then(function() {
-            console.log('Sync registered');
+            console.log('New sync registered successfully');
         }).catch(function(err) {
-            console.log('It broke');
-            console.log(err.message);
+            console.log('Error: ' + err.message);
         });
-        // }).then(() => {
-        //     navigator.serviceWorker.ready.then((reg) => {
-        //         return reg.sync.register('loadJokeSync-' + (new Date()).getTime());
-        //     }).then(() => {
-        //         console.log('registered new sync');
-        //     }).catch((error) => {
-        //         console.log('registering new sync failed: ' + error.message);
-        //     });
-        //
-        //     //app.loadRandomJoke();
-        // });
     });
 })();
