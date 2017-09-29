@@ -10,8 +10,7 @@ let filesToCache = [
     '/scripts/main.js',
     '/styles/inline.css',
     '/images/ic_add_white_24px.svg',
-    '/images/ic_refresh_white_24px.svg',
-    'https://assets.chucknorris.host/img/avatar/chuck-norris.png'
+    '/images/ic_refresh_white_24px.svg'
 ];
 
 // installiert alle Dateien die für die App Shell nötig sind
