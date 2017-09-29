@@ -3,6 +3,7 @@ const app = {
     spinner: document.querySelector('.loader'),
     jokeContainerElement: document.querySelector('.joke_container'),
     jokeTextElement: document.querySelector('.joke_container > .joke_text'),
+    onlineStatusElement: document.querySelector('.online_status > u'),
     lastJokeLocalStorageKey: 'lastJoke',
     loadRandomJokeSyncTagPrefix: 'loadJokeSync_',
     chuckApiClient: ChuckNorrisIOApiClient
@@ -40,4 +41,12 @@ app.displayJoke = (joke) => {
     app.jokeContainerElement.style.display = 'block';
     app.jokeTextElement.innerHTML = joke.value;
     app.deactivateSpinner();
+};
+
+app.isOnline = () => {
+    if (navigator.onLine){
+        app.onlineStatusElement.innerHTML = 'online';
+    } else {
+        app.onlineStatusElement.innerHTML = 'offline';
+    }
 };

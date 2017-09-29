@@ -18,11 +18,14 @@
 (function() {
     'use strict';
 
-    // TODO add startup code here
     let joke = app.loadLastJokeFromLocalStorage();
     if (joke) {
         app.displayJoke(joke);
     }
+
+    window.addEventListener('online', app.isOnline);
+    window.addEventListener('offline', app.isOnline);
+    app.isOnline();
 
     // Testen, ob ServiceWorker unterstützt wird und registrieren
     if ('serviceWorker' in navigator) {

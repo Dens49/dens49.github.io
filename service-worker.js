@@ -1,11 +1,13 @@
 'use strict';
 
 // durch cacheName ist Versionierung möglich
-let cacheName = 'seminar2_demo_pwa_0.1.2';
+let cacheName = 'seminar2_demo_pwa_0.1.3';
 let filesToCache = [
     '/',
     '/index.html',
+    '/scripts/chuckNorrisIOApiClient.js',
     '/scripts/app.js',
+    '/scripts/main.js',
     '/styles/inline.css',
     '/images/ic_add_white_24px.svg',
     '/images/ic_refresh_white_24px.svg'

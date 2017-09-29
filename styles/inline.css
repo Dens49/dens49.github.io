@@ -199,10 +199,12 @@ body {
     display: none;
 }
 
-.joke_image {
+.joke_image, .joke_text, .online_status {
     display: inline-block;
 }
 
-.joke_text {
-    display: inline-block;
+.online_status {
+    margin: 0 14px 0 0;
+    flex: 3;
+    font-size: 18px;
 }
