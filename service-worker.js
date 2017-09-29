@@ -51,3 +51,9 @@ self.addEventListener('fetch', (e) => {
         })
     );
 });
+
+self.addEventListener('sync', (e) => {
+    self.registration.showNotification('Event ' + e.tag + ' could was synced!');
+});
+
+

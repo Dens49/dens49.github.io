@@ -89,21 +89,57 @@
         app.deactivateSpinner();
     };
 
-    document.getElementById('butRefresh').addEventListener('click', function() {
-        // do refresh operations
-        app.loadRandomJoke();
-    });
-
     // TODO add startup code here
     let joke = app.loadLastJokeFromLocalStorage();
     if (joke) {
         app.displayJoke(joke);
     }
 
-    // Testen, ob ServiceWorker unterstützt wird.
+    // Testen, ob ServiceWorker unterstützt wird und registrieren
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-            .register('./service-worker.js')
-            .then(function() { console.log('[ServiceWorker] Registered'); });
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(() => {
+                console.log('[ServiceWorker] Registered');
+            }
+        );
     }
+    else {
+        let warning = 'Your Browser doesn\'t support service worker.\nYou should be ashamed of yourself.';
+        console.log(warning);
+        alert(warning);
+    }
+
+    // inspired by: https://jakearchibald.github.io/isserviceworkerready/demos/sync/
+    // Erlaubnis einholen notifications zu zeigen und request mit backgroundsync
+    document.getElementById('butRefresh').addEventListener('click', () => {
+        // refresh mit background sync
+        new Promise((resolve, reject) => {
+            Notification.requestPermission((result) => {
+                if (result !== 'granted') {
+                    return reject(Error('Notification permission denied'));
+                }
+                resolve();
+            })
+        }).then(function() {
+            return navigator.serviceWorker.ready;
+        }).then(function(reg) {
+            return reg.sync.register('syncTest');
+        }).then(function() {
+            console.log('Sync registered');
+        }).catch(function(err) {
+            console.log('It broke');
+            console.log(err.message);
+        });
+        // }).then(() => {
+        //     navigator.serviceWorker.ready.then((reg) => {
+        //         return reg.sync.register('loadJokeSync-' + (new Date()).getTime());
+        //     }).then(() => {
+        //         console.log('registered new sync');
+        //     }).catch((error) => {
+        //         console.log('registering new sync failed: ' + error.message);
+        //     });
+        //
+        //     //app.loadRandomJoke();
+        // });
+    });
 })();
