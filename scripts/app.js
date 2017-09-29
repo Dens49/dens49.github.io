@@ -124,6 +124,16 @@
         }).then(function() {
             return navigator.serviceWorker.ready;
         }).then(function(reg) {
+            // send callback to service worker
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({
+                    syncCallback: app.loadRandomJoke,
+                    syncTagPrefix: app.loadRandomJokeSyncTagPrefix
+                });
+            }
+            else {
+                console.log('couldn\'t send sync callback to service worker.');
+            }
             return reg.sync.register(app.loadRandomJokeSyncTagPrefix + (new Date()).getTime());
         }).then(function() {
             console.log('New sync registered successfully');

@@ -52,9 +52,10 @@ self.addEventListener('fetch', (e) => {
     );
 });
 
+// sync event kann als proxy betrachtet werden
 self.addEventListener('sync', (e) => {
-    if (e.tag.startsWith(app.loadRandomJokeSyncTagPrefix)) {
-        e.waitUntil(app.loadRandomJoke());
+    if (e.tag.startsWith(self.syncTagPrefix)) {
+        e.waitUntil(syncCallback());
         self.registration.showNotification('Synced ' + e.tag + ': Fetched new random joke!');
     }
     else {
@@ -62,4 +63,12 @@ self.addEventListener('sync', (e) => {
     }
 });
 
+self.addEventListener('message', (e) => {
+    if (e.data.syncCallback) {
+        self.syncCallback = e.data.syncCallback;
+    }
+    if (e.data.syncTagPrefix) {
+        self.syncTagPrefix = e.data.syncTagPrefix;
+    }
+});
 
