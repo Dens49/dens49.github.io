@@ -69,6 +69,8 @@ self.addEventListener('sync', (e) => {
                     }
                 });
                 self.registration.showNotification('Synced ' + e.tag + ': Fetched new random joke!');
+            }).catch((error) => {
+                console.log('Error: ' + error.message);
         }));
     }
     else {
