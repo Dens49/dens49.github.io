@@ -52,23 +52,27 @@ self.addEventListener('fetch', (e) => {
     );
 });
 
+self.importScripts('/scripts/chuckNorrisIOApiClient.js');
+
 // sync event kann als proxy betrachtet werden
 self.addEventListener('sync', (e) => {
-    if (e.tag.startsWith(self.syncTagPrefix)) {
-        e.waitUntil(syncCallback());
-        self.registration.showNotification('Synced ' + e.tag + ': Fetched new random joke!');
+    if (e.tag.startsWith('loadJokeSync_')) {
+        e.waitUntil(fetch(ChuckNorrisIOApiClient.url + ChuckNorrisIOApiClient.getRandomJokeEndpoint)
+            .then((response) => {
+                return response.json();
+            }).then((data) => {
+                self.clients.matchAll().then(all => {
+                    for (let i = 0; i < all.length; i++) {
+                        all[0].postMessage({joke: data});
+                    }
+                });
+                self.registration.showNotification('Synced ' + e.tag + ': Fetched new random joke!');
+        }).catch((error) => {
+            console.log('Error: ' + error.message);
+        }));
     }
     else {
         console.log('Some other sync tag that shouldn\'t trigger a notification: ' + e.tag);
-    }
-});
-
-self.addEventListener('message', (e) => {
-    if (e.data.syncCallback) {
-        self.syncCallback = e.data.syncCallback;
-    }
-    if (e.data.syncTagPrefix) {
-        self.syncTagPrefix = e.data.syncTagPrefix;
     }
 });
 
