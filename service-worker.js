@@ -17,20 +17,20 @@ let filesToCache = [
 // das sind alle Dateien die benötigt werden, um die app offline zeigen zu können
 self.addEventListener('install', (e) => {
     console.log('[ServiceWorker] Install');
-    /*e.waitUntil(
+    e.waitUntil(
         caches.open(cacheName)
             .then((cache) => {
                 console.log('[ServiceWorker] Caching app shell');
                 // fügt alle spezifizierten Dateien in den cache ein
                 return cache.addAll(filesToCache);
             })
-    );*/
+    );
 });
 
 // Cache kann geupdated werden
 self.addEventListener('activate', function(e) {
     console.log('[ServiceWorker] Activate');
-    /*e.waitUntil(
+    e.waitUntil(
         caches.keys().then((keyList) => {
             return Promise.all(keyList.map((key) => {
                 if (key !== cacheName) {
@@ -39,7 +39,7 @@ self.addEventListener('activate', function(e) {
                 }
             }))
         })
-    );*/
+    );
     return self.clients.claim();
 });
 
@@ -47,12 +47,11 @@ self.addEventListener('activate', function(e) {
 // damit ist sie auch offline verfügbar
 self.addEventListener('fetch', (e) => {
     console.log('[ServiceWorker] Fetch', e.request.url);
-    /*e.respondWith(
+    e.respondWith(
         caches.match(e.request).then((response) => {
             return response || fetch(e.request);
         })
-    );*/
-    e.respondWith(fetch(e.request));
+    );
 });
 
 self.importScripts('/scripts/chuckNorrisIOApiClient.js');
