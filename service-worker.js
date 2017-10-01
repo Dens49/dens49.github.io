@@ -84,7 +84,7 @@ self.addEventListener('notificationclick', (e) => {
     e.notification.close();
 
     // setze fokus auf ein offenes app fenster. wenn keins offen ist, öffne ein neues
-    event.waitUntil(clients.matchAll({
+    e.waitUntil(clients.matchAll({
         type: 'window'
     }).then((clientList) => {
         for (let i = 0; i < clientList.length; i++) {
