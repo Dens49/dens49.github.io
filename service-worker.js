@@ -1,7 +1,7 @@
 'use strict';
 
 // durch cacheName ist Versionierung möglich
-let cacheName = 'seminar2_demo_pwa_0.1.5';
+let cacheName = 'seminar2_demo_pwa_0.1.6';
 let filesToCache = [
     '/',
     '/index.html',
@@ -11,7 +11,8 @@ let filesToCache = [
     '/styles/inline.css',
     '/images/ic_add_white_24px.svg',
     '/images/ic_refresh_white_24px.svg',
-    '/images/chuck-norris.png'
+    '/images/chuck-norris.png',
+    '/images/chucknorris_logo.png'
 ];
 
 // installiert alle Dateien die für die App Shell nötig sind
@@ -47,6 +48,11 @@ self.addEventListener('activate', function(e) {
 // dadurch wird die webapp aus der gecacheten App Shell zur Verfügung gestellt
 // damit ist sie auch offline verfügbar
 self.addEventListener('fetch', (e) => {
+    // Möglichkeit fetch requests zu ignorieren die nicht gecached werden sollen
+    if (e.request.url === 'https://api.chucknorris.io/jokes/random') {
+        return;
+    }
+
     console.log('[ServiceWorker] Fetch', e.request.url);
     e.respondWith(
         caches.match(e.request).then((response) => {
@@ -107,7 +113,8 @@ function showNewCNFactNotification(bodyPreview) {
         self.registration.showNotification('Fetched new Chuck Norris Fact', {
             tag: 'chuck-norris-fact',
             body: bodyPreview,
-            icon: '/images/chuck-norris.png'
+            badge: '/images/chuck-norris.png',
+            icon: '/images/chucknorris_logo.png'
         });
 
     }

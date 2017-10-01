@@ -48,23 +48,35 @@
     // Erlaubnis einholen notifications zu zeigen und request mit backgroundsync
     document.getElementById('butRefresh').addEventListener('click', () => {
         app.activateSpinner();
-        // refresh mit background sync
-        new Promise((resolve, reject) => {
-            Notification.requestPermission((result) => {
-                if (result !== 'granted') {
-                    return reject(Error('Notification permission denied'));
-                }
-                resolve();
-            })
-        }).then(function() {
-            return navigator.serviceWorker.ready;
-        }).then(function(reg) {
-            return reg.sync.register(app.loadRandomJokeSyncTagPrefix + (new Date()).getTime());
-        }).then(function() {
-            console.log('New sync registered successfully');
-        }).catch(function(err) {
+        fetch(ChuckNorrisIOApiClient.url + ChuckNorrisIOApiClient.getRandomJokeEndpoint)
+        .then((response) => {
+                return response.json();
+        }).then((data) => {
+            app.jokeLoadedCallback(data);
+        }).catch((error) => {
             app.deactivateSpinner();
-            console.log('Error: ' + err.message);
+            console.log('Error: ' + error.message);
+            app.jokeTextElement.innerHTML = '<span style="color: #f00">Failed to fetch new Chuck Norris Fact. Trying background sync.You will be notified when it\'s fetched.</span>';
+
+            // refresh mit background sync
+            new Promise((resolve, reject) => {
+                Notification.requestPermission((result) => {
+                    if (result !== 'granted') {
+                        return reject(Error('Notification permission denied'));
+                    }
+                    resolve();
+                })
+            }).then(() => {
+                return navigator.serviceWorker.ready;
+            }).then((reg) => {
+                return reg.sync.register(app.loadRandomJokeSyncTagPrefix + (new Date()).getTime());
+            }).then(() => {
+                console.log('New sync registered successfully');
+            }).catch((error) => {
+                app.deactivateSpinner();
+                console.log('Error: ' + error.message);
+            });
         });
+
     });
 })();
