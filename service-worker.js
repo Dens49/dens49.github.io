@@ -80,6 +80,19 @@ self.addEventListener('sync', (e) => {
 
 self.addEventListener('notificationclick', (e) => {
     console.log('[Service Worker] Notification clicked');
+    // notification schließen
     e.notification.close();
-    e.waitUntil(clients.openWindow('/'));
+
+    // setze fokus auf ein offenes app fenster. wenn keins offen ist, öffne ein neues
+    event.waitUntil(clients.matchAll({
+        type: 'window'
+    }).then((clientList) => {
+        for (let i = 0; i < clientList.length; i++) {
+            const client = clientList[i];
+            if ('focus' in client) {
+                return client.focus();
+            }
+        }
+        return clients.openWindow('/');
+    }));
 });
