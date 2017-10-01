@@ -104,7 +104,7 @@ self.addEventListener('notificationclick', (e) => {
 
 function showNewCNFactNotification(bodyPreview) {
     if (Notification.permission === 'granted') {
-        new Notification('Fetched new Chuck Norris Fact', {
+        self.registration.showNotification('Fetched new Chuck Norris Fact', {
             tag: 'chuck-norris-fact',
             body: bodyPreview,
             icon: '/images/chuck-norris.png'
