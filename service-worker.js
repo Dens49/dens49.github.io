@@ -78,3 +78,8 @@ self.addEventListener('sync', (e) => {
     }
 });
 
+self.addEventListener('notificationclick', (e) => {
+    console.log('[Service Worker] Notification clicked');
+    e.notification.close();
+    event.waitUntil(clients.openWindow('/'));
+});
