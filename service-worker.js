@@ -1,7 +1,7 @@
 'use strict';
 
 // durch cacheName ist Versionierung möglich
-let cacheName = 'seminar2_demo_pwa_0.1.6';
+let cacheName = 'seminar2_demo_pwa_0.1.7';
 let filesToCache = [
     '/',
     '/index.html',
@@ -12,7 +12,8 @@ let filesToCache = [
     '/images/ic_add_white_24px.svg',
     '/images/ic_refresh_white_24px.svg',
     '/images/chuck-norris.png',
-    '/images/chucknorris_logo.png'
+    '/images/chucknorris_logo.png',
+    '/images/chuck-norris-badge.png'
 ];
 
 // installiert alle Dateien die für die App Shell nötig sind
@@ -113,7 +114,7 @@ function showNewCNFactNotification(bodyPreview) {
         self.registration.showNotification('Fetched new Chuck Norris Fact', {
             tag: 'chuck-norris-fact',
             body: bodyPreview,
-            badge: '/images/chuck-norris.png',
+            badge: '/images/chuck-norris-badge.png',
             icon: '/images/chucknorris_logo.png'
         });
 
