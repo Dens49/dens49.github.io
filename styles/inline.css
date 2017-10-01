@@ -193,12 +193,14 @@ body {
           flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; }
+  -webkit-overflow-scrolling: touch;
+  margin-left: 15px;
+  margin-right: 15px;
+  position: relative;
+}
 
 .joke_container {
     display: none;
-    margin-left: 15px;
-    margin-right: 15px;
 }
 
 .joke_image, .joke_text {
@@ -210,5 +212,10 @@ body {
 }
 
 .online_status {
-    margin-left: 15px;
+
+}
+
+footer {
+    position: absolute;
+    bottom: 15px;
 }
