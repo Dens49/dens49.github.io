@@ -73,7 +73,7 @@ self.addEventListener('sync', (e) => {
             }).then((data) => {
                 self.clients.matchAll().then(all => {
                     for (let i = 0; i < all.length; i++) {
-                        all[0].postMessage({joke: data});
+                        all[i].postMessage({joke: data});
                     }
                 });
                 let bodyPreview = data.value.substr(0, 30);
