@@ -14,9 +14,9 @@
 //
 // -edited by Dennis Bystrow for educational purposes-
 
+'use strict';
 
 (function() {
-    'use strict';
 
     let joke = app.loadLastJokeFromLocalStorage();
     if (joke) {
@@ -30,13 +30,13 @@
     // Testen, ob ServiceWorker unterstützt wird und registrieren
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./service-worker.js')
-            .then(() => {
-                console.log('[ServiceWorker] Registered');
-            }
-        );
-        navigator.serviceWorker.addEventListener('message', (e) => {
-            app.jokeLoadedCallback(e.data.joke);
-        });
+           .then(() => {
+               console.log('[ServiceWorker] Registered');
+           }
+       );
+       navigator.serviceWorker.addEventListener('message', (e) => {
+           app.jokeLoadedCallback(e.data.joke);
+       });
     }
     else {
         let warning = 'Your Browser doesn\'t support service worker.\nYou should be ashamed of yourself.';
@@ -48,12 +48,10 @@
     // Erlaubnis einholen notifications zu zeigen und request mit backgroundsync
     document.getElementById('butRefresh').addEventListener('click', () => {
         app.activateSpinner();
-        fetch(ChuckNorrisIOApiClient.url + ChuckNorrisIOApiClient.getRandomJokeEndpoint)
-        .then((response) => {
-                return response.json();
-        }).then((data) => {
+
+        app.chuckApiClient.getRandomJoke((data) => {
             app.jokeLoadedCallback(data);
-        }).catch((error) => {
+        }, (error) => {
             app.deactivateSpinner();
             console.log('Error: ' + error.message);
             app.jokeTextElement.innerHTML = '<span style="color: #f00">Failed to fetch new Chuck Norris Fact. Trying background sync.You will be notified when it\'s fetched.</span>';
@@ -77,6 +75,5 @@
                 console.log('Error: ' + error.message);
             });
         });
-
     });
 })();

@@ -1,10 +1,16 @@
 'use strict';
 
+importScripts('./scripts/apiclientlib/ApiClient.js');
+importScripts('./scripts/apiclientlib/Endpoint.js');
+importScripts('./scripts/chuckNorrisIOApiClient.js');
+
 // durch cacheName ist Versionierung möglich
-let cacheName = 'seminar2_demo_pwa_1.0.1';
+let cacheName = 'seminar2_demo_pwa_1.0.2';
 let filesToCache = [
     '/',
     '/index.html',
+    '/scripts/apiclientlib/ApiClient.js',
+    '/scripts/apiclientlib/Endpoint.js',
     '/scripts/chuckNorrisIOApiClient.js',
     '/scripts/app.js',
     '/scripts/main.js',
@@ -49,7 +55,7 @@ self.addEventListener('activate', function(e) {
 // damit ist sie auch offline verfügbar
 self.addEventListener('fetch', (e) => {
     // Möglichkeit fetch requests zu ignorieren die nicht gecached werden sollen
-    if (e.request.url === 'https://api.chucknorris.io/jokes/random') {
+    if (e.request.url.startsWith(ChuckNorrisIOApiClient.baseUrl)) {
         return;
     }
 
@@ -61,27 +67,23 @@ self.addEventListener('fetch', (e) => {
     );
 });
 
-self.importScripts('/scripts/chuckNorrisIOApiClient.js');
-
 // sync event kann als proxy betrachtet werden
 self.addEventListener('sync', (e) => {
     if (e.tag.startsWith('loadJokeSync_')) {
-        e.waitUntil(fetch(ChuckNorrisIOApiClient.url + ChuckNorrisIOApiClient.getRandomJokeEndpoint)
-            .then((response) => {
-                return response.json();
-            }).then((data) => {
-                self.clients.matchAll().then(all => {
-                    for (let i = 0; i < all.length; i++) {
-                        all[i].postMessage({joke: data});
-                    }
-                });
-                let bodyPreview = data.value.substr(0, 30);
-                if (bodyPreview.length < data.value.length) {
-                    bodyPreview += '...';
+        let chuckNorrisApi = new ChuckNorrisIOApiClient();
+        e.waitUntil(chuckNorrisApi.getRandomJoke((data) => {
+            self.clients.matchAll().then(all => {
+                for (let i = 0; i < all.length; i++) {
+                    all[i].postMessage({joke: data});
                 }
-                showNewCNFactNotification(bodyPreview);
-            }).catch((error) => {
-                console.log('Error: ' + error.message);
+            });
+            let bodyPreview = data.value.substr(0, 30);
+            if (bodyPreview.length < data.value.length) {
+                bodyPreview += '...';
+            }
+            showNewCNFactNotification(bodyPreview);
+        }, (error) => {
+            console.log('Error: ' + error.message);
         }));
     }
     else {

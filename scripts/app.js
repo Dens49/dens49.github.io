@@ -1,3 +1,5 @@
+'use strict';
+
 const app = {
     isLoading: false,
     spinner: document.querySelector('.loader'),
@@ -6,7 +8,7 @@ const app = {
     onlineStatusElement: document.querySelector('.online_status > u'),
     lastJokeLocalStorageKey: 'lastJoke',
     loadRandomJokeSyncTagPrefix: 'loadJokeSync_',
-    chuckApiClient: ChuckNorrisIOApiClient
+    chuckApiClient: new ChuckNorrisIOApiClient()
 };
 
 app.jokeLoadedCallback = (joke) => {
